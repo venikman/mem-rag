@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mem-rag Architecture Diagrams</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 24px;
+        background: #ffffff;
+        color: #1a1a1a;
+      }
+      header {
+        margin-bottom: 24px;
+      }
+      section {
+        margin: 32px 0;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px 0;
+      }
+      h2 {
+        font-size: 18px;
+        margin: 0 0 12px 0;
+      }
+      .diagram {
+        border: 1px solid #d7d7d7;
+        border-radius: 8px;
+        padding: 16px;
+        background: #fafafa;
+      }
+      .diagram svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .note {
+        font-size: 12px;
+        color: #5a5a5a;
+      }
+    </style>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "default" });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>mem-rag Architecture Diagrams</h1>
+      <div class="note">Rendered from docs/ARCHITECTURE.md</div>
+    </header>
+
+    <section id="diagram-ingestion">
+      <h2>Ingestion Pipeline</h2>
+      <div class="diagram">
+        <div class="mermaid" id="mermaid-ingestion">
+flowchart TD
+  CLI_ingest["CLI: mem-rag ingest"] --> includeExts["inferIncludeExts()"]
+  includeExts --> discoverFiles["discoverFiles()"]
+  discoverFiles --> chunkSet["getOrCreateChunkSet()"]
+
+  subgraph perDoc [PerDocumentLoop]
+    readFile["read file + hash"] --> extractText["extractPdfText()/extractMarkdownText()"]
+    extractText --> normalizeText["normalizeText()"]
+    normalizeText --> upsertDocument["upsertDocument()"]
+    upsertDocument --> changed{{"changed OR no chunks?"}}
+    changed -->|"no"| skipDoc["skip document"]
+    changed -->|"yes"| chunkText["chunkText()"]
+    chunkText --> embedChunks["embedder.getOrCreate()"]
+    embedChunks --> replaceChunks["replaceChunksForDocument()"]
+  end
+
+  chunkSet --> readFile
+  replaceChunks --> stats["update stats"]
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram-rag">
+      <h2>RAG Chat Pipeline (Deterministic)</h2>
+      <div class="diagram">
+        <div class="mermaid" id="mermaid-rag">
+flowchart TD
+  userQuestion["User question"] --> addUserTurn["addEpisodicTurn(user)"]
+  addUserTurn --> rewriteEnabled{{"rewrite enabled?"}}
+  rewriteEnabled -->|"yes"| doRewrite["maybeRewriteQuery()"]
+  rewriteEnabled -->|"no"| useOriginal["use original query"]
+  doRewrite --> embedQuery["embed query"]
+  useOriginal --> embedQuery
+  embedQuery --> chunkSet["getChunkSetId()"]
+  chunkSet --> retrieveDocs["retrieveDocChunks()"]
+  retrieveDocs --> rerankEnabled{{"rerank enabled?"}}
+  rerankEnabled -->|"yes"| doRerank["maybeRerankByLLM()"]
+  rerankEnabled -->|"no"| keepTopK["take topK"]
+  doRerank --> memoryBlend{{"memoryBlend=docs+semantic?"}}
+  keepTopK --> memoryBlend
+  memoryBlend -->|"yes"| retrieveMemory["retrieveSemanticMemories()"]
+  memoryBlend -->|"no"| skipMemory["skip memory retrieval"]
+  retrieveMemory --> buildContext["buildContextBlock()"]
+  skipMemory --> buildContext
+  buildContext --> generate["answerChat.complete()"]
+  generate --> addAssistantTurn["addEpisodicTurn(assistant)"]
+  addAssistantTurn --> memoryWriteEnabled{{"memory writes enabled?"}}
+  memoryWriteEnabled -->|"yes"| writeMemory["writeSemanticMemoryFromTurn()"]
+  memoryWriteEnabled -->|"no"| done["return answer + sources"]
+  writeMemory --> done
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram-eval-opt">
+      <h2>Eval and Optimize Flows</h2>
+      <div class="diagram">
+        <div class="mermaid" id="mermaid-eval-opt">
+flowchart TD
+  subgraph evalFlow [runEval]
+    evalQuestions["read questions.jsonl"] --> evalLoop["for each question"]
+    evalLoop --> ragTurn["runRagTurn()"]
+    ragTurn --> judge["judgeAnswer()"]
+    judge --> evalResults["append results.jsonl"]
+    ragTurn --> evalCost["update cost model"]
+    evalLoop --> evalIr["buildRagIr()"]
+  end
+
+  subgraph optimizeFlow [runOptimize]
+    configSpace["enumerateConfigSpace()"] --> sampleConfigs["sampleConfigs()"]
+    sampleConfigs --> stageA["Stage A eval (few questions)"]
+    stageA --> topN["select topN"]
+    topN --> stageB["Stage B eval (more questions)"]
+    stageB --> pareto["paretoFront()"]
+    sampleConfigs --> optIr["buildRagIr()"]
+  end
+
+  evalFlow --> evalOutputs["write config.json + rag_ir.json + cost_model.json"]
+  optimizeFlow --> optOutputs["write configs.jsonl + rag_ir.jsonl + pareto.json + cost_model.json"]
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram-modular">
+      <h2>Modular View</h2>
+      <div class="diagram">
+        <div class="mermaid" id="mermaid-modular">
+flowchart LR
+  CLI["CLI (src/cli.ts)"] --> Ingest["Ingestion (src/ingestion/*)"]
+  CLI --> Chat["Chat Pipeline (src/rag/*)"]
+  CLI --> EvalOpt["Eval/Optimize (src/eval, src/optimize)"]
+  CLI --> Mastra["Mastra Agent (src/mastra/*)"]
+
+  Ingest --> Storage["Storage (src/storage/storage.ts)"]
+  Ingest --> Embeddings["Embeddings Provider (LM Studio OpenAI-compat)"]
+
+  Chat --> Retrieval["Retrieval (src/rag/retrieval.ts)"]
+  Chat --> Memory["Memory (src/memory/*)"]
+  Chat --> ChatProvider["Chat Provider (OpenRouter or LM Studio)"]
+
+  Retrieval --> Storage
+  Memory --> Storage
+
+  Mastra --> MastraTools["Tools: searchDocs/searchMemory/writeMemory"]
+  MastraTools --> Storage
+
+  EvalOpt --> Chat
+  EvalOpt --> CostModel["Cost Model (src/rag/costModel.ts)"]
+
+  Storage --> DB["SQLite DB (.data/mem-rag.sqlite)"]
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram-data-model">
+      <h2>Data Model (ER Diagram)</h2>
+      <div class="diagram">
+        <div class="mermaid" id="mermaid-data-model">
+erDiagram
+  DOCUMENTS ||--|| DOCUMENT_TEXTS : has
+  DOCUMENTS ||--o{ CHUNKS : contains
+  CHUNK_SETS ||--o{ CHUNKS : groups
+  EMBEDDINGS ||--o{ CHUNKS : backs
+  SESSIONS ||--o{ EPISODIC_TURNS : logs
+  EMBEDDINGS ||--o{ SEMANTIC_MEMORIES : backs
+  SEMANTIC_MEMORIES ||--o| SEMANTIC_MEMORIES : supersedes
+
+  DOCUMENTS {
+    int id
+    text path
+    text title
+    text hash
+  }
+  DOCUMENT_TEXTS {
+    int document_id
+    text text
+  }
+  CHUNK_SETS {
+    int id
+    int chunk_size
+    int overlap
+    text embed_model
+  }
+  CHUNKS {
+    int id
+    int chunk_set_id
+    int document_id
+    int chunk_index
+    int embedding_id
+  }
+  EMBEDDINGS {
+    int id
+    int dims
+    text model
+    text hash
+  }
+  SESSIONS {
+    text id
+    text created_at
+  }
+  EPISODIC_TURNS {
+    int id
+    text session_id
+    text role
+    text text
+  }
+  SEMANTIC_MEMORIES {
+    int id
+    text kind
+    real importance
+    real confidence
+    int supersedes_id
+    int embedding_id
+  }
+        </div>
+      </div>
+    </section>
+
+    <section id="diagram-runtime">
+      <h2>Physical / Runtime Topology</h2>
+      <div class="diagram">
+        <svg id="runtime-svg" xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+              <path d="M0,0 L10,4 L0,8 Z" fill="#2f2f2f" />
+            </marker>
+          </defs>
+          <rect x="40" y="40" width="220" height="80" rx="8" ry="8" fill="#f4f6f8" stroke="#2f2f2f" />
+          <text x="150" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="14">mem-rag CLI</text>
+          <text x="150" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Node process</text>
+
+          <rect x="330" y="40" width="220" height="80" rx="8" ry="8" fill="#f4f6f8" stroke="#2f2f2f" />
+          <text x="440" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">SQLite DB</text>
+          <text x="440" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">documents, chunks, memories</text>
+
+          <rect x="620" y="20" width="240" height="80" rx="8" ry="8" fill="#f4f6f8" stroke="#2f2f2f" />
+          <text x="740" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">LM Studio</text>
+          <text x="740" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">embeddings + support model</text>
+
+          <rect x="620" y="140" width="240" height="80" rx="8" ry="8" fill="#f4f6f8" stroke="#2f2f2f" />
+          <text x="740" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">OpenRouter</text>
+          <text x="740" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">chat + judge models</text>
+
+          <rect x="40" y="180" width="220" height="80" rx="8" ry="8" fill="#f4f6f8" stroke="#2f2f2f" />
+          <text x="150" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">Poppler</text>
+          <text x="150" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">pdftotext binary</text>
+
+          <line x1="260" y1="80" x2="330" y2="80" stroke="#2f2f2f" marker-end="url(#arrow)" />
+          <text x="295" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">read/write</text>
+
+          <line x1="260" y1="80" x2="620" y2="60" stroke="#2f2f2f" marker-end="url(#arrow)" />
+          <text x="440" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">embeddings + support</text>
+
+          <line x1="260" y1="80" x2="620" y2="170" stroke="#2f2f2f" marker-end="url(#arrow)" />
+          <text x="440" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">chat + judge</text>
+
+          <line x1="150" y1="180" x2="150" y2="120" stroke="#2f2f2f" marker-end="url(#arrow)" />
+          <text x="110" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">PDF text</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="diagram-pareto">
+      <h2>Pareto Frontier (Optimization Visual)</h2>
+      <div class="diagram">
+        <svg id="pareto-svg" xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300">
+          <rect x="0" y="0" width="900" height="300" fill="#ffffff" />
+          <line x1="60" y1="240" x2="840" y2="240" stroke="#2f2f2f" />
+          <line x1="60" y1="240" x2="60" y2="40" stroke="#2f2f2f" />
+          <text x="450" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Latency or Cost (lower is better)</text>
+          <text x="20" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" transform="rotate(-90 20 140)">Score (higher is better)</text>
+
+          <circle cx="140" cy="200" r="5" fill="#7a7a7a" />
+          <circle cx="220" cy="190" r="5" fill="#7a7a7a" />
+          <circle cx="300" cy="170" r="5" fill="#7a7a7a" />
+          <circle cx="380" cy="160" r="5" fill="#7a7a7a" />
+          <circle cx="460" cy="120" r="5" fill="#7a7a7a" />
+          <circle cx="560" cy="130" r="5" fill="#7a7a7a" />
+          <circle cx="660" cy="110" r="5" fill="#7a7a7a" />
+          <circle cx="740" cy="90" r="5" fill="#7a7a7a" />
+
+          <polyline points="140,200 300,170 460,120 660,110 740,90" fill="none" stroke="#2f2f2f" stroke-width="2" />
+          <text x="740" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Pareto frontier</text>
+        </svg>
+      </div>
+    </section>
+  </body>
+</html>

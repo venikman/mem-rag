@@ -1,0 +1,10 @@
+{
+  "ingestion": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-ingestion.png",
+  "rag": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-rag.png",
+  "eval_opt": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-eval-opt.png",
+  "modular": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-modular.png",
+  "data_model": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-data-model.png",
+  "runtime": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-runtime.png",
+  "pareto": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-pareto.png",
+  "full_page": "/var/folders/3g/18yj4ksx5bv8hw1ffd3ds7yh0000gn/T/cursor/screenshots/Users/stas-studio/Developer/mem/mem-rag/output/playwright/diagram-page.png"
+}

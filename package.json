@@ -1,0 +1,30 @@
+{
+  "name": "mem-rag",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "mem-rag": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mastra/core": "^1.1.0",
+    "better-sqlite3": "^11.10.0",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.13.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9"
+  }
+}

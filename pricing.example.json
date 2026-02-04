@@ -1,0 +1,5 @@
+{
+  "openrouter:grok-4.1-fast": { "promptPer1M": 0.0, "completionPer1M": 0.0 },
+  "openrouter:YOUR_MODEL_ID": { "promptPer1M": 0.0, "completionPer1M": 0.0 }
+}
+
