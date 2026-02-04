@@ -25,36 +25,36 @@ cp .env.example .env
 cp pricing.example.json pricing.json
 ```
 
-3) Build:
+4) Build:
 ```bash
-pnpm build
+pnpm run build
 ```
 
 ## Commands
 
 Ingest a corpus (PDF + MD):
 ```bash
-mem-rag ingest ../ --include "**/*.pdf" --include "**/*.md"
+pnpm run mem-rag -- ingest ../ --include "**/*.pdf" --include "**/*.md"
 ```
 
 Interactive chat:
 ```bash
-mem-rag chat
+pnpm run mem-rag -- chat
 ```
 
 Mastra tool-calling mode (agent calls `search_docs` / `search_memory` / `write_memory`):
 ```bash
-mem-rag chat --mode mastra
+pnpm run mem-rag -- chat --mode mastra
 ```
 
 Run evaluation:
 ```bash
-mem-rag eval --questions eval/questions.jsonl
+pnpm run mem-rag -- eval --questions eval/questions.jsonl
 ```
 
 Optimize pipeline configs (RAG-PE):
 ```bash
-mem-rag optimize --questions eval/questions.jsonl
+pnpm run mem-rag -- optimize --questions eval/questions.jsonl
 ```
 
 ## Notes

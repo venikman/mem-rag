@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mem-rag</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d10;
+        --panel: #11151b;
+        --text: #e6edf3;
+        --muted: #9aa7b4;
+        --accent: #6ee7ff;
+        --border: #243041;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 18px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      a {
+        color: var(--accent);
+        text-underline-offset: 0.18em;
+      }
+      :focus-visible {
+        outline: 3px solid #a78bfa;
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>mem-rag</h1>
+      <p class="muted">Agentic memory RAG experiment outputs.</p>
+      <div class="panel">
+        <p>
+          Open published experiment reports:
+          <a href="./experiments/index.html">docs/experiments</a>
+        </p>
+        <p class="muted">
+          Generate reports via <code>pnpm run mem-rag -- publish --run runs/&lt;ts&gt;/eval</code>.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
+

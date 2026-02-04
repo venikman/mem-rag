@@ -1,0 +1,21 @@
+{
+  "runId": "1770194705646-eval",
+  "runType": "eval",
+  "title": "mem-rag 1770194705646-eval",
+  "createdAt": "2026-02-04T08:45:05.646Z",
+  "summary": {
+    "runType": "eval",
+    "n": 2,
+    "avgWeightedScore": 4.2,
+    "avgCorrectness": 5,
+    "avgGroundedness": 5,
+    "avgMemoryUse": 1,
+    "avgClarity": 5,
+    "p50LatencyMs": 16788.731248999997,
+    "p95LatencyMs": 28332.832042000005,
+    "totalTokens": 43727,
+    "avgTokens": 21863.5,
+    "totalDollars": 0,
+    "avgDollars": 0
+  }
+}

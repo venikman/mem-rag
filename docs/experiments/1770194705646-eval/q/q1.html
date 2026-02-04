@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mem-rag 1770194705646-eval · q1</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <div class="wrap hdr">
+        <div class="brand">
+          <strong>mem-rag experiments</strong>
+          <span>Agentic memory RAG evaluation</span>
+        </div>
+        <nav aria-label="Page"><a href="../index.html">Home</a><a href="../index.html">Run</a></nav>
+      </div>
+    </header>
+    <main id="main">
+      <h1>mem-rag 1770194705646-eval · q1</h1>
+    <p class="muted">
+      <a href="../index.html">← Back to run</a>
+      · Run: <span class="num">1770194705646-eval</span>
+      · Question: <span class="num">q1</span>
+    </p>
+
+    <h2>Question</h2>
+    <div class="panel"><div class="prewrap">Summarize the main contribution of the most relevant paper in my corpus.</div></div>
+
+    <h2>Answer</h2>
+    <div class="panel"><div class="prewrap">**The paper &quot;AI Meets Brain: A Unified Survey on Memory Systems from Cognitive Neuroscience to Autonomous Agents&quot; (arXiv:2512.23343v1) provides a comprehensive interdisciplinary synthesis bridging cognitive neuroscience and LLM-driven autonomous agents.**
+
+Its key contributions include:
+- Defining memory&#39;s role across neuroscience, LLMs, and agents.
+- Comparative analysis of memory taxonomies (e.g., episodic/semantic, short/long-term; inside-trail/cross-trail), storage, and lifecycle (extraction, update, retrieval, forgetting) in biological vs. artificial systems.
+- Reviews of agent memory benchmarks, security (attacks/defenses), and future directions like multimodal memory and skill acquisition.</div></div>
+
+    <h2>Scores</h2>
+    <div class="panel">
+      <p class="muted">
+        Weighted: <span class="num">4.200</span>
+        · Latency: <span class="num">28333</span> ms
+        · Tokens: <span class="num">20321</span>
+        · $: <span class="num">0.0000</span>
+      </p>
+      
+      <table>
+        <thead><tr><th scope="col">metric</th><th scope="col">score</th></tr></thead>
+        <tbody>
+          <tr><td>correctness</td><td class="num">5</td></tr>
+          <tr><td>groundedness</td><td class="num">5</td></tr>
+          <tr><td>memoryUse</td><td class="num">1</td></tr>
+          <tr><td>clarity</td><td class="num">5</td></tr>
+        </tbody>
+      </table>
+      <p class="muted"><strong>Notes:</strong> Accurately identifies the most prominent paper from sources and summarizes contributions directly supported by snippets (e.g., taxonomies in [S17], title/authors in [S29]). No prior preferences/context to leverage.</p>
+    
+    </div>
+
+    <h2>Timings (ms)</h2>
+    <div class="panel">
+      <table>
+        <thead><tr><th scope="col">node</th><th scope="col">ms</th></tr></thead>
+        <tbody>
+          <tr><td>rewrite</td><td class="num">18599</td></tr><tr><td>rerank</td><td class="num">5288</td></tr><tr><td>generate</td><td class="num">4290</td></tr><tr><td>embed.query</td><td class="num">150</td></tr><tr><td>retrieve.docs</td><td class="num">6</td></tr><tr><td>retrieve.memory</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Retrieved sources</h2>
+    <div class="panel">
+      <ul><li><span class="num">[S30]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">45</span></li><li><span class="num">[S1]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">29</span></li><li><span class="num">[S17]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">9</span></li><li><span class="num">[S18]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">41</span></li><li><span class="num">[S29]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">1</span></li></ul>
+    </div>
+
+    <h2>Artifacts</h2>
+    <ul><li><a href="../artifacts/results.jsonl">results.jsonl</a></li><li><a href="../artifacts/config.json">config.json</a></li><li><a href="../artifacts/rag_ir.json">rag_ir.json</a></li><li><a href="../artifacts/manifest.json">manifest.json</a></li><li><a href="../artifacts/cost_model.json">cost_model.json</a></li></ul>
+    </main>
+    <footer>
+      Generated report · Accessible HTML · No external dependencies
+    </footer>
+  </body>
+</html>

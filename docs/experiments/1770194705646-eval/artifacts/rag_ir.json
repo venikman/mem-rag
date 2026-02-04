@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "createdAt": "2026-02-04T08:45:05.658Z",
+  "configHash": "8d2ae1ada3f1042bef769ee6ab8bc4919dfabe3fd72357ac6299164b2c18dea1",
+  "nodes": [
+    {
+      "id": "query.embed",
+      "type": "query.embed",
+      "params": {}
+    },
+    {
+      "id": "query.retrieve",
+      "type": "query.retrieve",
+      "params": {
+        "topK": 10,
+        "chunkSizeTokens": 800,
+        "overlapTokens": 100
+      }
+    },
+    {
+      "id": "query.rewrite",
+      "type": "query.rewrite",
+      "params": {}
+    },
+    {
+      "id": "query.rerank",
+      "type": "query.rerank",
+      "params": {
+        "method": "llm"
+      }
+    },
+    {
+      "id": "query.composeContext",
+      "type": "query.composeContext",
+      "params": {
+        "contextBudgetTokens": 6000,
+        "memoryBlend": "docs_only"
+      }
+    },
+    {
+      "id": "query.generateAnswer",
+      "type": "query.generateAnswer",
+      "params": {}
+    }
+  ],
+  "edges": [
+    {
+      "from": "query.rewrite",
+      "to": "query.embed"
+    },
+    {
+      "from": "query.embed",
+      "to": "query.retrieve"
+    },
+    {
+      "from": "query.retrieve",
+      "to": "query.rerank"
+    },
+    {
+      "from": "query.rerank",
+      "to": "query.composeContext"
+    },
+    {
+      "from": "query.composeContext",
+      "to": "query.generateAnswer"
+    }
+  ]
+}

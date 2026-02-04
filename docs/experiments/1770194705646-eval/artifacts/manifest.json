@@ -1,0 +1,28 @@
+{
+  "runType": "eval",
+  "createdAt": "2026-02-04T08:45:05.646Z",
+  "appVersion": "0.1.0",
+  "gitCommit": "c150020b6d02a009f69752abe34de96c01cb2c1c",
+  "nodeVersion": "v25.2.1",
+  "models": {
+    "embedModel": "text-embedding-mxbai-embed-large-v1",
+    "chatModel": "x-ai/grok-4.1-fast",
+    "judgeModel": "x-ai/grok-4.1-fast",
+    "supportProvider": "lmstudio",
+    "supportModel": "qwen/qwen3-coder-next"
+  },
+  "questions": {
+    "path": "eval/questions.jsonl",
+    "sha256": "290902a4863de267b290f613bfe9e7c7bdfbc4fa79761128f5924a6020c7adac"
+  },
+  "commandLine": [
+    "/Users/stas-studio/.nvm/versions/node/v25.2.1/bin/node",
+    "/Users/stas-studio/Developer/mem/mem-rag/dist/cli.js",
+    "--",
+    "eval",
+    "--questions",
+    "eval/questions.jsonl",
+    "--rewrite",
+    "--rerank"
+  ]
+}

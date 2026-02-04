@@ -1,0 +1,9 @@
+{
+  "chunkSizeTokens": 800,
+  "overlapTokens": 100,
+  "topK": 10,
+  "rewrite": true,
+  "rerank": true,
+  "contextBudgetTokens": 6000,
+  "memoryBlend": "docs_only"
+}

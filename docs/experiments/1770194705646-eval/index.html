@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mem-rag 1770194705646-eval</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <div class="wrap hdr">
+        <div class="brand">
+          <strong>mem-rag experiments</strong>
+          <span>Agentic memory RAG evaluation</span>
+        </div>
+        <nav aria-label="Page"><a href="./index.html">Home</a></nav>
+      </div>
+    </header>
+    <main id="main">
+      <h1>mem-rag 1770194705646-eval</h1>
+    <p class="muted">Run: <span class="num">1770194705646-eval</span> · Type: <span class="pill a">eval</span></p>
+
+    <section class="grid" aria-label="Summary">
+      <div class="card"><div class="k">Questions</div><div class="v num">2</div></div><div class="card"><div class="k">Avg score</div><div class="v num">4.200</div></div><div class="card"><div class="k">p95 latency (ms)</div><div class="v num">28333</div></div>
+    </section>
+
+    <h2>Rubric</h2>
+    <section class="grid" aria-label="Rubric summary">
+      <div class="card"><div class="k">Avg correctness</div><div class="v num">5.00</div><div class="s">0–5</div></div><div class="card"><div class="k">Avg groundedness</div><div class="v num">5.00</div><div class="s">0–5</div></div><div class="card"><div class="k">Avg memoryUse</div><div class="v num">1.00</div><div class="s">0–5</div></div><div class="card"><div class="k">Avg clarity</div><div class="v num">5.00</div><div class="s">0–5</div></div>
+    </section>
+
+    <h2>Cost & recall</h2>
+    <section class="grid" aria-label="Cost and recall summary">
+      <div class="card"><div class="k">Total tokens</div><div class="v num">43727</div></div><div class="card"><div class="k">Avg tokens</div><div class="v num">21864</div></div><div class="card"><div class="k">Total $</div><div class="v num">0.0000</div></div><div class="card"><div class="k">Avg $</div><div class="v num">0.0000</div></div><div class="card"><div class="k">Recall@K</div><div class="v num">N/A</div><div class="s">fraction of hits</div></div>
+    </section>
+
+    <h2>Questions</h2>
+    <div class="panel" role="region" aria-label="Per-question metrics">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">weighted</th>
+            <th scope="col">correct</th>
+            <th scope="col">ground</th>
+            <th scope="col">memory</th>
+            <th scope="col">clarity</th>
+            <th scope="col">latency</th>
+            <th scope="col">tokens</th>
+            <th scope="col">$</th>
+            <th scope="col">recall</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="q/q1.html">q1</a></td><td class="num">4.200</td><td class="num">5</td><td class="num">5</td><td class="num">1</td><td class="num">5</td><td class="num">28333</td><td class="num">20321</td><td class="num">0.0000</td><td class="num">N/A</td></tr><tr><td><a href="q/q2.html">q2</a></td><td class="num">4.200</td><td class="num">5</td><td class="num">5</td><td class="num">1</td><td class="num">5</td><td class="num">16789</td><td class="num">23406</td><td class="num">0.0000</td><td class="num">N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Artifacts</h2>
+    <ul><li><a href="artifacts/results.jsonl">results.jsonl</a></li><li><a href="artifacts/config.json">config.json</a></li><li><a href="artifacts/rag_ir.json">rag_ir.json</a></li><li><a href="artifacts/manifest.json">manifest.json</a></li><li><a href="artifacts/cost_model.json">cost_model.json</a></li></ul>
+    <details><summary>manifest.json</summary><pre>{
+  &quot;runType&quot;: &quot;eval&quot;,
+  &quot;createdAt&quot;: &quot;2026-02-04T08:45:05.646Z&quot;,
+  &quot;appVersion&quot;: &quot;0.1.0&quot;,
+  &quot;gitCommit&quot;: &quot;c150020b6d02a009f69752abe34de96c01cb2c1c&quot;,
+  &quot;nodeVersion&quot;: &quot;v25.2.1&quot;,
+  &quot;models&quot;: {
+    &quot;embedModel&quot;: &quot;text-embedding-mxbai-embed-large-v1&quot;,
+    &quot;chatModel&quot;: &quot;x-ai/grok-4.1-fast&quot;,
+    &quot;judgeModel&quot;: &quot;x-ai/grok-4.1-fast&quot;,
+    &quot;supportProvider&quot;: &quot;lmstudio&quot;,
+    &quot;supportModel&quot;: &quot;qwen/qwen3-coder-next&quot;
+  },
+  &quot;questions&quot;: {
+    &quot;path&quot;: &quot;eval/questions.jsonl&quot;,
+    &quot;sha256&quot;: &quot;290902a4863de267b290f613bfe9e7c7bdfbc4fa79761128f5924a6020c7adac&quot;
+  },
+  &quot;commandLine&quot;: [
+    &quot;/Users/stas-studio/.nvm/versions/node/v25.2.1/bin/node&quot;,
+    &quot;/Users/stas-studio/Developer/mem/mem-rag/dist/cli.js&quot;,
+    &quot;--&quot;,
+    &quot;eval&quot;,
+    &quot;--questions&quot;,
+    &quot;eval/questions.jsonl&quot;,
+    &quot;--rewrite&quot;,
+    &quot;--rerank&quot;
+  ]
+}</pre></details>
+    <details><summary>config.json</summary><pre>{
+  &quot;chunkSizeTokens&quot;: 800,
+  &quot;overlapTokens&quot;: 100,
+  &quot;topK&quot;: 10,
+  &quot;rewrite&quot;: true,
+  &quot;rerank&quot;: true,
+  &quot;contextBudgetTokens&quot;: 6000,
+  &quot;memoryBlend&quot;: &quot;docs_only&quot;
+}</pre></details>
+    </main>
+    <footer>
+      Generated report · Accessible HTML · No external dependencies
+    </footer>
+  </body>
+</html>

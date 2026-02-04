@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-02-04T08:45:57.533Z",
+  "nodes": {
+    "rewrite": {
+      "count": 2,
+      "avgMs": 10188.472999499998
+    },
+    "embed.query": {
+      "count": 2,
+      "avgMs": 92.30527100000108
+    },
+    "retrieve.docs": {
+      "count": 2,
+      "avgMs": 4.511521000000357
+    },
+    "rerank": {
+      "count": 2,
+      "avgMs": 5741.304437499999
+    },
+    "retrieve.memory": {
+      "count": 2,
+      "avgMs": 0.007499999999708962
+    },
+    "generate": {
+      "count": 2,
+      "avgMs": 6534.179916500003
+    }
+  }
+}

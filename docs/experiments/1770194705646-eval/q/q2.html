@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mem-rag 1770194705646-eval · q2</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <div class="wrap hdr">
+        <div class="brand">
+          <strong>mem-rag experiments</strong>
+          <span>Agentic memory RAG evaluation</span>
+        </div>
+        <nav aria-label="Page"><a href="../index.html">Home</a><a href="../index.html">Run</a></nav>
+      </div>
+    </header>
+    <main id="main">
+      <h1>mem-rag 1770194705646-eval · q2</h1>
+    <p class="muted">
+      <a href="../index.html">← Back to run</a>
+      · Run: <span class="num">1770194705646-eval</span>
+      · Question: <span class="num">q2</span>
+    </p>
+
+    <h2>Question</h2>
+    <div class="panel"><div class="prewrap">What benchmarks are mentioned for evaluating agent memory? Cite sources.</div></div>
+
+    <h2>Answer</h2>
+    <div class="panel"><div class="prewrap">**Semantic-oriented benchmarks** evaluate internal state maintenance and cognitive abilities like fidelity (Fid.), dynamics (Dyn.), and generalization (Gen.).[S29]
+
+From Table 1 [S29]:
+- LifelongAgentBench [389] (lifelong learning, text, 1,400)
+- PrefEval [385] (personalized preference following, text, 3,000)
+- MPR [380] (multi-hop personalized reasoning, text, 108,000)
+- StreamBench [303] (continuous online learning, text, 9,702)
+- Madial-Bench [102] (memory-augmented dialogue, text, 160)
+- HotpotQA [336] (multi-hop QA, text, 112,779)
+- PerLTQA [68] (personalized memory, text, 8,593)
+- StoryBench [271] (interactive fiction, text, -)
+- SHARE [146] (skill learning/transfer, text, 1,201)
+- MovieChat-1K [246] (long video QA, text+movie, 15,000)
+- Mobile-Agent-E [293] (complex mobile tasks, text+image, 25)
+- M3-Agent [190] (long-form video QA/memory, text+audio+video, 5,510)
+- Text2Mem Bench [276] (memory operations, text, -)
+- SoMoSiMu-Bench [204] (social simulation, text+structured, 6,700)
+- MemDaily [377] (personalized reasoning, text, 26,003)
+
+Additional mentions: LTMBenchmark [36], StoryBench [272], MemoryAgentBench [110], Evo-Memory [296], MemBench [5], HaluMem [39].[S7]
+
+**Episodic-oriented benchmarks** assess performance gains in downstream tasks.[S29]
+
+From Table 2 [S29]:
+- WebChoreArena [199] (memory+calculation, text+image, 532)
+- ScienceWorld [283] (scientific experiments, text, 7,200)
+- WebArena [397] (web operations, text+image, 812)
+- WebShop [337] (e-commerce, text+image, 12,087)
+- ToolBench [227] (tool/API use, text, 142,950)
+- GAIA [197] (general AI assistants, text+image+spreadsheet, 466)
+- BabyAI [52] (language learning, text+symbolic, 100,000+)
+- xBench-DS [43] (business tasks, text, 100)
+- AgentOccam [330] (web interaction, text+image, 812)
+- StuLife [33] (shared memory tasks, text, 1,284)
+- Mind2Web [62] (web agent tasks, text+image+file, 2,350)
+- PersonalWAB [31] (personalized web tasks, text+web API, 9,000)
+
+Other mentions: DialSim [377], LongMemEval [304].[S16][S29][S30]</div></div>
+
+    <h2>Scores</h2>
+    <div class="panel">
+      <p class="muted">
+        Weighted: <span class="num">4.200</span>
+        · Latency: <span class="num">16789</span> ms
+        · Tokens: <span class="num">23406</span>
+        · $: <span class="num">0.0000</span>
+      </p>
+      
+      <table>
+        <thead><tr><th scope="col">metric</th><th scope="col">score</th></tr></thead>
+        <tbody>
+          <tr><td>correctness</td><td class="num">5</td></tr>
+          <tr><td>groundedness</td><td class="num">5</td></tr>
+          <tr><td>memoryUse</td><td class="num">1</td></tr>
+          <tr><td>clarity</td><td class="num">5</td></tr>
+        </tbody>
+      </table>
+      
+    
+    </div>
+
+    <h2>Timings (ms)</h2>
+    <div class="panel">
+      <table>
+        <thead><tr><th scope="col">node</th><th scope="col">ms</th></tr></thead>
+        <tbody>
+          <tr><td>generate</td><td class="num">8778</td></tr><tr><td>rerank</td><td class="num">6195</td></tr><tr><td>rewrite</td><td class="num">1778</td></tr><tr><td>embed.query</td><td class="num">34</td></tr><tr><td>retrieve.docs</td><td class="num">4</td></tr><tr><td>retrieve.memory</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Retrieved sources</h2>
+    <div class="panel">
+      <ul><li><span class="num">[S16]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">46</span></li><li><span class="num">[S29]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">23</span></li><li><span class="num">[S30]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">34</span></li><li><span class="num">[S7]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">27</span></li><li><span class="num">[S1]</span> ../memory/README.md <span class="muted">chunk</span> <span class="num">62</span></li><li><span class="num">[S3]</span> ../mem-rag/README.md <span class="muted">chunk</span> <span class="num">59</span></li><li><span class="num">[S14]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">2</span></li><li><span class="num">[S2]</span> ../2512.23343v1.pdf <span class="muted">chunk</span> <span class="num">6</span></li><li><span class="num">[S13]</span> ../mem-rag/docs/EXPERIMENT.md <span class="muted">chunk</span> <span class="num">60</span></li></ul>
+    </div>
+
+    <h2>Artifacts</h2>
+    <ul><li><a href="../artifacts/results.jsonl">results.jsonl</a></li><li><a href="../artifacts/config.json">config.json</a></li><li><a href="../artifacts/rag_ir.json">rag_ir.json</a></li><li><a href="../artifacts/manifest.json">manifest.json</a></li><li><a href="../artifacts/cost_model.json">cost_model.json</a></li></ul>
+    </main>
+    <footer>
+      Generated report · Accessible HTML · No external dependencies
+    </footer>
+  </body>
+</html>

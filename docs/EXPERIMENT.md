@@ -61,7 +61,7 @@ Defaults (recommended):
 Ingest a small folder first (10–50 docs) so retrieval stays fast (this repo uses brute-force similarity search).
 
 ```bash
-pnpm exec mem-rag ingest ../ --include "**/*.pdf" --include "**/*.md"
+pnpm run mem-rag -- ingest ../ --include "**/*.pdf" --include "**/*.md"
 ```
 
 Useful flags:
@@ -84,7 +84,7 @@ If they don’t match you’ll see:
 Deterministic RAG pipeline + explicit memory writer.
 
 ```bash
-pnpm exec mem-rag chat --rewrite --rerank --memory-blend docs+semantic
+pnpm run mem-rag -- chat --rewrite --rerank --memory-blend docs+semantic
 ```
 
 Commands inside chat:
@@ -101,7 +101,7 @@ Suggested “agentic memory” scenario:
 Agent calls tools `search_docs/search_memory/write_memory`.
 
 ```bash
-pnpm exec mem-rag chat --mode mastra
+pnpm run mem-rag -- chat --mode mastra
 ```
 
 ## Step 3 — Create an evaluation set
@@ -119,16 +119,32 @@ Tips:
 ## Step 4 — Run evaluation (scores + latency + tokens + $)
 
 ```bash
-pnpm exec mem-rag eval --questions eval/questions.jsonl --rewrite --rerank
+pnpm run mem-rag -- eval --questions eval/questions.jsonl --rewrite --rerank
 ```
 
 Outputs go to `runs/<timestamp>/eval/` unless you pass `--out <dir>`.
+
+### Generate an HTML report (local)
+```bash
+pnpm run mem-rag -- report --run runs/<timestamp>/eval
+```
+
+### Publish to GitHub Pages (writes to `docs/experiments/`)
+```bash
+pnpm run mem-rag -- publish --run runs/<timestamp>/eval
+```
+
+### Auto-deploy on push (GitHub Actions)
+This repo includes a Pages workflow at `.github/workflows/pages.yml` that deploys the `docs/` folder on pushes to `main`.
+In your GitHub repo settings:
+- Settings → Pages → Source: **GitHub Actions**
 
 ### Files produced
 - `runs/<ts>/eval/config.json` — pipeline config
 - `runs/<ts>/eval/rag_ir.json` — serializable RAG-IR
 - `runs/<ts>/eval/results.jsonl` — one line per question with scores/metrics
 - `runs/<ts>/eval/cost_model.json` — additive timing model snapshot (RAG-CM)
+- `runs/<ts>/eval/manifest.json` — metadata (models, git commit, questions hash, args)
 
 ### Reading `results.jsonl`
 Key fields:
@@ -155,10 +171,25 @@ Stage A (cheap) runs across many configs; Stage B runs on the top configs.
 By default it will also **auto-ingest** any missing chunk sets for sampled configs.
 
 ```bash
-pnpm exec mem-rag optimize --questions eval/questions.jsonl --corpus ../ --include "**/*.pdf" --include "**/*.md" --min-configs 10 --stage-a 5 --stage-b 20 --top-n 3
+pnpm run mem-rag -- optimize --questions eval/questions.jsonl --corpus ../ --include "**/*.pdf" --include "**/*.md" --min-configs 10 --stage-a 5 --stage-b 20 --top-n 3
 ```
 
 Outputs go to `runs/<timestamp>/optimize/` unless you pass `--out <dir>`.
+
+### Generate an HTML report (local)
+```bash
+pnpm run mem-rag -- report --run runs/<timestamp>/optimize
+```
+
+### Publish to GitHub Pages (writes to `docs/experiments/`)
+```bash
+pnpm run mem-rag -- publish --run runs/<timestamp>/optimize
+```
+
+### Auto-deploy on push (GitHub Actions)
+This repo includes a Pages workflow at `.github/workflows/pages.yml` that deploys the `docs/` folder on pushes to `main`.
+In your GitHub repo settings:
+- Settings → Pages → Source: **GitHub Actions**
 
 ### Files produced
 - `runs/<ts>/optimize/configs.jsonl` — evaluated configs (`configHash` → config)
@@ -166,6 +197,7 @@ Outputs go to `runs/<timestamp>/optimize/` unless you pass `--out <dir>`.
 - `runs/<ts>/optimize/results.jsonl` — summary per config/stage
 - `runs/<ts>/optimize/pareto.json` — Pareto frontier (non-dominated configs)
 - `runs/<ts>/optimize/cost_model.json` — updated RAG-CM snapshot
+- `runs/<ts>/optimize/manifest.json` — metadata (models, git commit, questions hash, args)
 
 ### Reading optimization summaries
 Each line in `results.jsonl` is a config summary:

@@ -17,6 +17,8 @@ import { runEval } from "./eval/runEval.js";
 import { runOptimize } from "./optimize/runOptimize.js";
 import { enumerateConfigSpace, sampleConfigs } from "./rag/explorer.js";
 import { makeResearchAgent } from "./mastra/researchAgent.js";
+import { buildRunManifest, writeRunManifest } from "./report/manifest.js";
+import { deriveRunId, publishRunToSite, writeRunReport } from "./report/publishSite.js";
 
 const program = new Command();
 program.name("mem-rag").description("Agentic memory research assistant (CLI)");
@@ -222,6 +224,22 @@ program
     const outDir = opts.out || path.join(cfg.runsDir, `${Date.now()}`, "eval");
     ensureDir(outDir);
 
+    try {
+      const manifest = buildRunManifest({
+        runType: "eval",
+        embedModel: cfg.lmstudio.embedModel,
+        chatModel: cfg.openrouter.chatModel,
+        judgeModel: cfg.openrouter.judgeModel,
+        supportProvider: cfg.support.provider,
+        supportModel: cfg.support.model,
+        questionsPath: opts.questions,
+        commandLine: process.argv
+      });
+      writeRunManifest(outDir, manifest);
+    } catch (err) {
+      console.warn(`Warning: could not write manifest.json (${String(err)})`);
+    }
+
     const config: RagPipelineConfig = RagPipelineConfigSchema.parse({
       chunkSizeTokens: opts.chunkSize,
       overlapTokens: opts.overlap,
@@ -307,6 +325,30 @@ program
     const outDir = opts.out || path.join(cfg.runsDir, `${Date.now()}`, "optimize");
     ensureDir(outDir);
 
+    try {
+      const manifest = buildRunManifest({
+        runType: "optimize",
+        embedModel: cfg.lmstudio.embedModel,
+        chatModel: cfg.openrouter.chatModel,
+        judgeModel: cfg.openrouter.judgeModel,
+        supportProvider: cfg.support.provider,
+        supportModel: cfg.support.model,
+        questionsPath: opts.questions,
+        commandLine: process.argv,
+        optimize: {
+          seed: opts.seed,
+          warmup: opts.warmup,
+          minConfigs: opts.minConfigs,
+          stageA: opts.stageA,
+          stageB: opts.stageB,
+          topN: opts.topN
+        }
+      });
+      writeRunManifest(outDir, manifest);
+    } catch (err) {
+      console.warn(`Warning: could not write manifest.json (${String(err)})`);
+    }
+
     const space = enumerateConfigSpace();
     const configs = sampleConfigs(space, { seed: opts.seed, warmup: opts.warmup, minConfigs: opts.minConfigs });
 
@@ -353,7 +395,55 @@ program
     console.log(JSON.stringify(res, null, 2));
   });
 
-program.parseAsync(process.argv).catch((err) => {
+program
+  .command("report")
+  .requiredOption("--run <dir>", "Run directory (runs/<ts>/eval or runs/<ts>/optimize)")
+  .option("--out <dir>", "Output directory (default: <run>/report)", "")
+  .option("--copy-artifacts", "Copy raw artifacts into the report", false)
+  .option("--title <string>", "Report title", "")
+  .action(async (opts) => {
+    const runDir = String(opts.run);
+    const derived = deriveRunId(runDir);
+    const runId = derived.runId;
+    const outDir = opts.out ? String(opts.out) : path.join(runDir, "report");
+    const title = opts.title ? String(opts.title) : `mem-rag ${runId}`;
+    const res = await writeRunReport({
+      runDir,
+      outDir,
+      runId,
+      title,
+      copyArtifacts: Boolean(opts.copyArtifacts)
+    });
+    console.log(JSON.stringify(res, null, 2));
+  });
+
+program
+  .command("publish")
+  .requiredOption("--run <dir>", "Run directory (runs/<ts>/eval or runs/<ts>/optimize)")
+  .option("--site <dir>", "Site directory (default: docs/experiments)", "docs/experiments")
+  .option("--run-id <id>", "Run id for URL (default: derived from run path)", "")
+  .option("--title <string>", "Title shown in site index", "")
+  .action(async (opts) => {
+    const runDir = String(opts.run);
+    const derived = deriveRunId(runDir);
+    const runId = opts.runId ? String(opts.runId) : derived.runId;
+    const title = opts.title ? String(opts.title) : `mem-rag ${runId}`;
+    const res = await publishRunToSite({
+      runDir,
+      siteDir: String(opts.site),
+      runId,
+      title
+    });
+    console.log(JSON.stringify(res, null, 2));
+  });
+
+// pnpm passes script args as: `<cmd> -- <args...>`, which means our argv may contain an extra leading `"--"`.
+// Commander treats that as an option terminator and will stop parsing flags for subcommands.
+// Normalize it away so `pnpm run mem-rag -- eval --questions ...` works.
+const argv = [...process.argv];
+if (argv[2] === "--") argv.splice(2, 1);
+
+program.parseAsync(argv).catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
