@@ -5,6 +5,8 @@ Single-agent personal research assistant CLI with:
 - Agentic long-term memory (episodic + semantic) across runs
 - RAG pipeline evaluation + plan exploration (quality vs cost/latency)
 
+Live site: [venikman.github.io/mem-rag](https://venikman.github.io/mem-rag/)
+
 See `docs/EXPERIMENT.md` for how to run the experiment and interpret results.
 See `docs/ARCHITECTURE.md` for contributor-focused diagrams and data flow.
 
